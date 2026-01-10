@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>料金プラン - TaskFlow</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
+    <div class="flex-1">
+      <a href="/" class="btn btn-ghost text-xl font-bold text-primary">TaskFlow</a>
+    </div>
+    <div class="flex-none">
+      <ul class="menu menu-horizontal px-1 hidden md:flex">
+        <li><a href="/">Home</a></li>
+        <li><a href="/pricing/" class="active">Pricing</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+      <a href="/contact/" class="btn btn-primary btn-sm ml-2">Start Free</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <div class="bg-gradient-to-br from-primary/10 to-secondary/10 py-20 px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <h1 class="text-5xl font-bold mb-4">シンプルな料金体系</h1>
+      <p class="text-xl text-base-content/70">チームの規模に合わせて、最適なプランをお選びください</p>
+    </div>
+  </div>
+
+  <!-- Pricing Cards -->
+  <div class="py-20 px-4 -mt-10">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Free -->
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title text-2xl">Free</h2>
+            <p class="text-base-content/70">個人利用に最適</p>
+            <div class="py-6">
+              <span class="text-5xl font-bold">¥0</span>
+              <span class="text-base-content/70">/月</span>
+            </div>
+            <ul class="space-y-3 mb-6">
+              <li class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                最大 3 プロジェクト
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                基本的なタスク管理
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                1GB ストレージ
+              </li>
+              <li class="flex items-center gap-2 text-base-content/50">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+                チーム機能
+              </li>
+            </ul>
+            <div class="card-actions">
+              <a href="/contact/" class="btn btn-outline w-full">始める</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pro -->
+        <div class="card bg-primary text-primary-content shadow-xl scale-105">
+          <div class="card-body">
+            <div class="badge badge-secondary mb-2">人気</div>
+            <h2 class="card-title text-2xl">Pro</h2>
+            <p class="text-primary-content/70">成長中のチームに</p>
+            <div class="py-6">
+              <span class="text-5xl font-bold">¥1,980</span>
+              <span class="text-primary-content/70">/月</span>
+            </div>
+            <ul class="space-y-3 mb-6">
+              <li class="flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                無制限のプロジェクト
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                最大 10 名のチーム
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                50GB ストレージ
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                優先サポート
+              </li>
+            </ul>
+            <div class="card-actions">
+              <a href="/contact/" class="btn btn-secondary w-full">14日間無料で試す</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title text-2xl">Enterprise</h2>
+            <p class="text-base-content/70">大規模組織向け</p>
+            <div class="py-6">
+              <span class="text-5xl font-bold">要相談</span>
+            </div>
+            <ul class="space-y-3 mb-6">
+              <li class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                Pro のすべての機能
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                無制限のチームメンバー
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                SSO / SAML 対応
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                専任サポート
+              </li>
+            </ul>
+            <div class="card-actions">
+              <a href="/contact/" class="btn btn-outline w-full">お問い合わせ</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="bg-base-200 py-20 px-4">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-12">よくある質問</h2>
+      <div class="space-y-4">
+        <div class="collapse collapse-arrow bg-base-100">
+          <input type="radio" name="faq" checked />
+          <div class="collapse-title text-lg font-medium">無料トライアル後、自動で課金されますか？</div>
+          <div class="collapse-content">
+            <p>いいえ、トライアル終了後に自動で課金されることはありません。継続利用をご希望の場合は、お支払い情報をご登録ください。</p>
+          </div>
+        </div>
+        <div class="collapse collapse-arrow bg-base-100">
+          <input type="radio" name="faq" />
+          <div class="collapse-title text-lg font-medium">プランの変更はいつでもできますか？</div>
+          <div class="collapse-content">
+            <p>はい、いつでもアップグレード・ダウングレードが可能です。差額は日割り計算されます。</p>
+          </div>
+        </div>
+        <div class="collapse collapse-arrow bg-base-100">
+          <input type="radio" name="faq" />
+          <div class="collapse-title text-lg font-medium">支払い方法は？</div>
+          <div class="collapse-content">
+            <p>クレジットカード（Visa, Mastercard, American Express）および請求書払いに対応しています。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer footer-center p-4 bg-base-300 text-base-content">
+    <aside>
+      <p>Copyright 2025 TaskFlow Inc. All rights reserved</p>
+    </aside>
+  </footer>
+
+  <script type="module" src="/pricing/index.ts"></script>
+</body>
+</html>

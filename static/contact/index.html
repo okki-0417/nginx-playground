@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact - TaskFlow</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
+    <div class="flex-1">
+      <a href="/" class="btn btn-ghost text-xl font-bold text-primary">TaskFlow</a>
+    </div>
+    <div class="flex-none">
+      <ul class="menu menu-horizontal px-1 hidden md:flex">
+        <li><a href="/">Home</a></li>
+        <li><a href="/pricing/">Pricing</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/" class="active">Contact</a></li>
+      </ul>
+      <a href="/contact/" class="btn btn-primary btn-sm ml-2">Start Free</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <div class="bg-gradient-to-br from-primary/10 to-secondary/10 py-20 px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <h1 class="text-5xl font-bold mb-4">お問い合わせ</h1>
+      <p class="text-xl text-base-content/70">ご質問・ご要望をお聞かせください</p>
+    </div>
+  </div>
+
+  <!-- Contact Section -->
+  <div class="py-20 px-4">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid md:grid-cols-2 gap-12">
+        <!-- Contact Form -->
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title text-2xl mb-6">メッセージを送る</h2>
+            <form id="contact-form" class="space-y-4">
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text font-medium">お名前 *</span>
+                </label>
+                <input type="text" name="name" placeholder="山田 太郎" class="input input-bordered w-full" required />
+              </div>
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text font-medium">メールアドレス *</span>
+                </label>
+                <input type="email" name="email" placeholder="taro@example.com" class="input input-bordered w-full" required />
+              </div>
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text font-medium">会社名</span>
+                </label>
+                <input type="text" name="company" placeholder="株式会社サンプル" class="input input-bordered w-full" />
+              </div>
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text font-medium">お問い合わせ種別 *</span>
+                </label>
+                <select name="type" class="select select-bordered w-full" required>
+                  <option value="" disabled selected>選択してください</option>
+                  <option value="trial">無料トライアルの申し込み</option>
+                  <option value="demo">デモのリクエスト</option>
+                  <option value="enterprise">Enterprise プランについて</option>
+                  <option value="support">サポート</option>
+                  <option value="other">その他</option>
+                </select>
+              </div>
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text font-medium">メッセージ *</span>
+                </label>
+                <textarea name="message" class="textarea textarea-bordered h-32" placeholder="お問い合わせ内容をご記入ください" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary w-full">送信する</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="space-y-8">
+          <div>
+            <h2 class="text-2xl font-bold mb-6">その他の連絡方法</h2>
+            <div class="space-y-6">
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-lg">メール</h3>
+                  <p class="text-base-content/70">support@taskflow.example.com</p>
+                  <p class="text-sm text-base-content/50">24時間以内に返信いたします</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-lg">チャットサポート</h3>
+                  <p class="text-base-content/70">平日 9:00 - 18:00</p>
+                  <p class="text-sm text-base-content/50">Pro / Enterprise プラン向け</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-lg">オフィス</h3>
+                  <p class="text-base-content/70">東京都渋谷区...</p>
+                  <p class="text-sm text-base-content/50">来社は事前予約制</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Link -->
+          <div class="bg-base-200 rounded-2xl p-6">
+            <h3 class="font-semibold text-lg mb-2">よくある質問</h3>
+            <p class="text-base-content/70 mb-4">お問い合わせの前に、FAQ をご確認ください。</p>
+            <a href="/pricing/" class="btn btn-outline btn-sm">FAQ を見る</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer footer-center p-4 bg-base-300 text-base-content">
+    <aside>
+      <p>Copyright 2025 TaskFlow Inc. All rights reserved</p>
+    </aside>
+  </footer>
+
+  <script type="module" src="/contact/index.ts"></script>
+</body>
+</html>

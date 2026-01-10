@@ -1,0 +1,41 @@
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.d:/etc/nginx/conf.d
+      - ./static/dist:/usr/share/nginx/html
+      - wordpress_data:/var/www/html
+    depends_on:
+      - wordpress
+
+  wordpress:
+    image: wordpress:fpm
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress_user
+      WORDPRESS_DB_PASSWORD: wordpress_password
+      WORDPRESS_DB_NAME: wordpress_db
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_HOME', 'http://localhost:8080/wordpress');
+        define('WP_SITEURL', 'http://localhost:8080/wordpress');
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./wordpress/themes:/var/www/html/wp-content/themes
+    depends_on:
+      - db
+
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: wordpress_db
+      MYSQL_USER: wordpress_user
+      MYSQL_PASSWORD: wordpress_password
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
+  wordpress_data:
