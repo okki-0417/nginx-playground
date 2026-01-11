@@ -1,43 +1,177 @@
-async function checkApiStatus() {
-  const statusEl = document.getElementById("api-status");
-  if (!statusEl) return;
+const tabs = document.getElementById("tabs")!;
+const editor = document.getElementById("editor") as HTMLTextAreaElement;
+const saveBtn = document.getElementById("save-btn") as HTMLButtonElement;
+const reloadBtn = document.getElementById("reload-btn") as HTMLButtonElement;
+const status = document.getElementById("status")!;
 
+// 各ファイルの状態を管理
+type FileState = { content: string; originalContent: string; modified: boolean };
+const fileStates = new Map<string, FileState>();
+let currentFile: string | null = null;
+
+async function loadFileList() {
   try {
-    const [healthRes, infoRes] = await Promise.all([
-      fetch("/api/health"),
-      fetch("/api/info"),
-    ]);
+    const res = await fetch("/api/admin/sites");
+    const files: string[] = await res.json();
 
-    if (healthRes.ok && infoRes.ok) {
-      const health = await healthRes.json();
-      const info = await infoRes.json();
+    tabs.innerHTML = files
+      .map((f) => {
+        // タブ表示名: "00-upstream.conf" → "upstream", "locations/static.conf" → "static"
+        const displayName = f
+          .replace(".conf", "")
+          .replace(/^\d+-/, "")
+          .replace("locations/", "");
+        return `<a class="tab" data-file="${f}">${displayName}</a>`;
+      })
+      .join("");
 
-      statusEl.innerHTML = `
-        <div class="flex flex-col items-center gap-4">
-          <div class="flex items-center gap-3">
-            <span class="badge badge-success badge-lg gap-2">
-              <span class="w-2 h-2 bg-success-content rounded-full animate-pulse"></span>
-              ${health.status === "ok" ? "All Systems Operational" : "Degraded"}
-            </span>
-          </div>
-          <div class="text-sm text-base-content/70">
-            ${info.name} v${info.version}
-          </div>
-        </div>
-      `;
-    } else {
-      throw new Error("API response not ok");
+    // 各ファイルの内容を事前に読み込み
+    await Promise.all(files.map(loadFileContent));
+
+    // タブクリックイベント
+    document.querySelectorAll(".tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const file = (tab as HTMLElement).dataset.file;
+        if (file) switchTab(file);
+      });
+    });
+
+    // 最初のタブを選択
+    if (files.length > 0 && files[0]) {
+      switchTab(files[0]);
     }
   } catch (error) {
-    statusEl.innerHTML = `
-      <div class="flex items-center gap-3 text-warning">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-        </svg>
-        <span>API に接続できません（API サーバーを起動してください）</span>
-      </div>
-    `;
+    tabs.innerHTML = '<span class="text-error">読み込みエラー</span>';
   }
 }
 
-document.addEventListener("DOMContentLoaded", checkApiStatus);
+async function loadFileContent(name: string) {
+  try {
+    const res = await fetch(`/api/admin/sites/${name}`);
+    const data = await res.json();
+    fileStates.set(name, {
+      content: data.content,
+      originalContent: data.content,
+      modified: false,
+    });
+  } catch (error) {
+    console.error(`Failed to load ${name}:`, error);
+  }
+}
+
+function switchTab(name: string) {
+  // 現在の編集内容を保存
+  if (currentFile && fileStates.has(currentFile)) {
+    const state = fileStates.get(currentFile)!;
+    state.content = editor.value;
+    state.modified = state.content !== state.originalContent;
+    updateTabStyle(currentFile, state.modified);
+  }
+
+  // 新しいタブに切り替え
+  currentFile = name;
+  const state = fileStates.get(name);
+  if (state) {
+    editor.value = state.content;
+    editor.disabled = false;
+    saveBtn.disabled = false;
+  }
+
+  // タブのアクティブ状態を更新
+  document.querySelectorAll(".tab").forEach((tab) => {
+    tab.classList.toggle("tab-active", (tab as HTMLElement).dataset.file === name);
+  });
+
+  status.textContent = "";
+}
+
+function updateTabStyle(name: string, modified: boolean) {
+  const tab = document.querySelector(`.tab[data-file="${name}"]`);
+  if (tab) {
+    tab.classList.toggle("after:content-['*']", modified);
+    tab.classList.toggle("after:text-orange-500", modified);
+  }
+}
+
+async function saveCurrentFile() {
+  if (!currentFile) return;
+
+  const state = fileStates.get(currentFile);
+  if (!state) return;
+
+  state.content = editor.value;
+
+  try {
+    saveBtn.disabled = true;
+    status.textContent = "保存中...";
+    status.className = "mt-2 text-sm";
+
+    const res = await fetch(`/api/admin/sites/${currentFile}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content: state.content }),
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      state.originalContent = state.content;
+      state.modified = false;
+      updateTabStyle(currentFile, false);
+      status.textContent = `${currentFile} を保存しました`;
+      status.className = "mt-2 text-sm text-success";
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    status.textContent = "保存に失敗: " + (error as Error).message;
+    status.className = "mt-2 text-sm text-error";
+  } finally {
+    saveBtn.disabled = false;
+  }
+}
+
+async function reloadNginx() {
+  try {
+    reloadBtn.disabled = true;
+    reloadBtn.textContent = "reloading...";
+
+    const res = await fetch("/api/admin/reload", { method: "POST" });
+    const data = await res.json();
+
+    if (data.success) {
+      status.textContent = "nginx をリロードしました";
+      status.className = "mt-2 text-sm text-success";
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    status.textContent = "リロード失敗: " + (error as Error).message;
+    status.className = "mt-2 text-sm text-error";
+  } finally {
+    reloadBtn.disabled = false;
+    reloadBtn.textContent = "nginx reload";
+  }
+}
+
+// イベントリスナー
+saveBtn.addEventListener("click", saveCurrentFile);
+reloadBtn.addEventListener("click", reloadNginx);
+
+editor.addEventListener("keydown", (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+    e.preventDefault();
+    saveCurrentFile();
+  }
+});
+
+editor.addEventListener("input", () => {
+  if (currentFile && fileStates.has(currentFile)) {
+    const state = fileStates.get(currentFile)!;
+    state.content = editor.value;
+    state.modified = state.content !== state.originalContent;
+    updateTabStyle(currentFile, state.modified);
+  }
+});
+
+// 初期化
+loadFileList();

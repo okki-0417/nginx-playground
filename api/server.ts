@@ -1,6 +1,12 @@
+import { readdir } from "node:fs/promises";
+import { join } from "node:path";
+
 // 型定義
 type User = { id: number; name: string; email: string };
 type Todo = { id: number; userId: number; title: string; completed: boolean };
+
+// nginx.d ディレクトリのパス
+const NGINX_CONF_DIR = join(import.meta.dir, "..", "nginx.d");
 
 // 仮のデータベース
 const users: User[] = [
@@ -122,6 +128,88 @@ const server = Bun.serve({
     if (url.pathname === "/api/echo" && method === "POST") {
       const body = await req.json();
       return Response.json({ received: body });
+    }
+
+    // ========================================
+    // Admin API: nginx 設定管理
+    // ========================================
+
+    // GET /api/admin/sites - conf ファイル一覧
+    if (url.pathname === "/api/admin/sites" && method === "GET") {
+      try {
+        const rootFiles = await readdir(NGINX_CONF_DIR);
+        const confFiles = rootFiles.filter((f) => f.endsWith(".conf"));
+
+        // locations/ 配下も取得
+        const locationsDir = join(NGINX_CONF_DIR, "locations");
+        try {
+          const locationFiles = await readdir(locationsDir);
+          const locationConfFiles = locationFiles
+            .filter((f) => f.endsWith(".conf"))
+            .map((f) => `locations/${f}`);
+          confFiles.push(...locationConfFiles);
+        } catch {
+          // locations ディレクトリがなければスキップ
+        }
+
+        return Response.json(confFiles);
+      } catch (error) {
+        return Response.json({ error: "Failed to read conf directory" }, { status: 500 });
+      }
+    }
+
+    // GET /api/admin/sites/:path - conf ファイル内容取得 (locations/xxx.conf も対応)
+    const siteMatch = url.pathname.match(/^\/api\/admin\/sites\/(.+\.conf)$/);
+    if (siteMatch && method === "GET") {
+      const filePath = siteMatch[1];
+      // セキュリティ: ../ を含むパスは拒否
+      if (filePath?.includes("..")) {
+        return Response.json({ error: "Invalid file path" }, { status: 400 });
+      }
+      try {
+        const fullPath = join(NGINX_CONF_DIR, filePath!);
+        const file = Bun.file(fullPath);
+        if (!(await file.exists())) {
+          return Response.json({ error: "File not found" }, { status: 404 });
+        }
+        const content = await file.text();
+        return Response.json({ name: filePath, content });
+      } catch (error) {
+        return Response.json({ error: "Failed to read file" }, { status: 500 });
+      }
+    }
+
+    // PUT /api/admin/sites/:path - conf ファイル更新
+    if (siteMatch && method === "PUT") {
+      const filePath = siteMatch[1];
+      if (filePath?.includes("..")) {
+        return Response.json({ error: "Invalid file path" }, { status: 400 });
+      }
+      try {
+        const body = (await req.json()) as { content: string };
+        const fullPath = join(NGINX_CONF_DIR, filePath!);
+        await Bun.write(fullPath, body.content);
+        return Response.json({ success: true, name: filePath });
+      } catch (error) {
+        return Response.json({ error: "Failed to write file" }, { status: 500 });
+      }
+    }
+
+    // POST /api/admin/reload - nginx リロード
+    if (url.pathname === "/api/admin/reload" && method === "POST") {
+      try {
+        const proc = Bun.spawn(["docker", "compose", "exec", "nginx", "nginx", "-s", "reload"], {
+          cwd: join(import.meta.dir, ".."),
+        });
+        const exitCode = await proc.exited;
+        if (exitCode === 0) {
+          return Response.json({ success: true, message: "nginx reloaded" });
+        } else {
+          return Response.json({ error: "nginx reload failed", exitCode }, { status: 500 });
+        }
+      } catch (error) {
+        return Response.json({ error: "Failed to execute reload command" }, { status: 500 });
+      }
     }
 
     return new Response("Not Found", { status: 404 });

@@ -3,166 +3,70 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TaskFlow - シンプルなタスク管理</title>
+  <title>nginx Learning Server</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <!-- Navbar -->
-  <div class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
+  <div class="navbar bg-base-100 shadow-sm">
     <div class="flex-1">
-      <a href="/" class="btn btn-ghost text-xl font-bold text-primary">TaskFlow</a>
-    </div>
-    <div class="flex-none">
-      <ul class="menu menu-horizontal px-1 hidden md:flex">
-        <li><a href="/">Home</a></li>
-        <li><a href="/pricing/">Pricing</a></li>
-        <li><a href="/about/">About</a></li>
-        <li><a href="/contact/">Contact</a></li>
-      </ul>
-      <a href="/contact/" class="btn btn-primary btn-sm ml-2">Start Free</a>
+      <span class="text-xl font-bold text-primary">nginx Learning Server</span>
     </div>
   </div>
 
-  <!-- Hero -->
-  <div class="hero min-h-[80vh] bg-gradient-to-br from-primary/10 to-secondary/10">
-    <div class="hero-content text-center">
-      <div class="max-w-2xl">
-        <div class="badge badge-primary badge-outline mb-4">New: AI タスク提案機能</div>
-        <h1 class="text-5xl md:text-6xl font-bold leading-tight">
-          タスク管理を<br><span class="text-primary">シンプル</span>に
-        </h1>
-        <p class="py-6 text-lg text-base-content/70">
-          TaskFlow は、チームの生産性を最大化するモダンなタスク管理ツールです。
-          直感的な操作で、複雑なプロジェクトもスムーズに進行。
-        </p>
-        <div class="flex gap-4 justify-center flex-wrap">
-          <a href="/contact/" class="btn btn-primary btn-lg">無料で始める</a>
-          <a href="/about/" class="btn btn-outline btn-lg">詳しく見る</a>
-        </div>
-        <p class="mt-4 text-sm text-base-content/50">クレジットカード不要 / 14日間無料トライアル</p>
+  <div class="max-w-6xl mx-auto p-8">
+    <!-- Navigation Links -->
+    <section class="mb-10">
+      <h1 class="text-2xl font-bold mb-4">Sites & Services</h1>
+      <div class="flex flex-wrap gap-3">
+        <a href="/chat/" class="btn btn-outline btn-sm">Chat (WebSocket)</a>
+        <a href="/users/" class="btn btn-outline btn-sm">Users</a>
+        <a href="/todos/" class="btn btn-outline btn-sm">Todos</a>
+        <a href="/api/health" class="btn btn-outline btn-secondary btn-sm">API Health</a>
+        <a href="/flask/" class="btn btn-outline btn-accent btn-sm">Flask</a>
+        <a href="/wordpress/" class="btn btn-outline btn-info btn-sm">WordPress</a>
       </div>
-    </div>
-  </div>
 
-  <!-- Stats -->
-  <div class="bg-base-200 py-12">
-    <div class="max-w-6xl mx-auto px-4">
-      <div class="stats stats-vertical md:stats-horizontal shadow w-full">
-        <div class="stat text-center">
-          <div class="stat-value text-primary">10,000+</div>
-          <div class="stat-desc">アクティブユーザー</div>
-        </div>
-        <div class="stat text-center">
-          <div class="stat-value text-secondary">500+</div>
-          <div class="stat-desc">導入企業</div>
-        </div>
-        <div class="stat text-center">
-          <div class="stat-value">99.9%</div>
-          <div class="stat-desc">稼働率</div>
-        </div>
-        <div class="stat text-center">
-          <div class="stat-value text-accent">4.8</div>
-          <div class="stat-desc">ユーザー評価</div>
+      <div class="mt-4 text-sm">
+        <div class="mockup-code">
+          <pre><code>Browser → nginx (SSL, HTTP/2)
+   ├── /           → static (静的ファイル)
+   ├── /api/*      → Bun (HTTP Proxy)
+   ├── /flask/*    → Flask (uWSGI)
+   └── /wordpress/* → PHP-FPM (FastCGI)</code></pre>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <!-- Features -->
-  <div class="py-20 px-4">
-    <div class="max-w-6xl mx-auto">
-      <div class="text-center mb-16">
-        <h2 class="text-4xl font-bold mb-4">なぜ TaskFlow?</h2>
-        <p class="text-base-content/70 max-w-2xl mx-auto">
-          シンプルさと強力な機能を両立。チームの規模を問わず、最適なタスク管理を実現します。
-        </p>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow">
-          <div class="card-body">
-            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-              <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-              </svg>
-            </div>
-            <h3 class="card-title">高速パフォーマンス</h3>
-            <p class="text-base-content/70">最新技術で構築された軽量なアプリケーション。ストレスのない操作感を実現。</p>
-          </div>
-        </div>
-        <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow">
-          <div class="card-body">
-            <div class="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center mb-4">
-              <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-              </svg>
-            </div>
-            <h3 class="card-title">チームコラボレーション</h3>
-            <p class="text-base-content/70">リアルタイム同期でチーム全員が常に最新の状態を共有。コミュニケーションも円滑に。</p>
-          </div>
-        </div>
-        <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow">
-          <div class="card-body">
-            <div class="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4">
-              <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-              </svg>
-            </div>
-            <h3 class="card-title">分析ダッシュボード</h3>
-            <p class="text-base-content/70">プロジェクトの進捗を可視化。ボトルネックを発見し、チームの生産性を向上。</p>
-          </div>
+    <div class="divider"></div>
+
+    <!-- Config Editor with Tabs -->
+    <section>
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-bold">nginx Config Editor</h2>
+        <div class="flex gap-2">
+          <button id="save-btn" class="btn btn-primary btn-sm" disabled>
+            保存 (Ctrl+S)
+          </button>
+          <button id="reload-btn" class="btn btn-warning btn-sm">
+            nginx reload
+          </button>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- API Status -->
-  <div class="bg-base-200 py-16 px-4">
-    <div class="max-w-4xl mx-auto text-center">
-      <h2 class="text-3xl font-bold mb-8">システムステータス</h2>
-      <div id="api-status" class="flex items-center justify-center gap-3">
-        <span class="loading loading-spinner loading-md"></span>
-        <span>API に接続中...</span>
+      <div id="tabs" class="tabs tabs-boxed mb-4">
+        <span class="loading loading-spinner loading-sm ml-2"></span>
       </div>
-    </div>
-  </div>
 
-  <!-- CTA -->
-  <div class="py-20 px-4">
-    <div class="max-w-4xl mx-auto text-center">
-      <h2 class="text-4xl font-bold mb-4">今すぐ始めましょう</h2>
-      <p class="text-base-content/70 mb-8 max-w-xl mx-auto">
-        14日間の無料トライアルで、TaskFlow のすべての機能をお試しください。
-      </p>
-      <a href="/contact/" class="btn btn-primary btn-lg">無料トライアルを開始</a>
-    </div>
+      <textarea
+        id="editor"
+        rows="7"
+        class="textarea textarea-bordered w-full font-mono [tab-size:2] text-sm leading-relaxed"
+        placeholder="タブを選択してください..."
+        disabled
+      ></textarea>
+      <div id="status" class="mt-2 text-sm h-5"></div>
+    </section>
   </div>
-
-  <!-- Footer -->
-  <footer class="footer p-10 bg-base-300 text-base-content">
-    <nav>
-      <h6 class="footer-title">サービス</h6>
-      <a class="link link-hover">機能紹介</a>
-      <a class="link link-hover" href="/pricing/">料金プラン</a>
-      <a class="link link-hover">導入事例</a>
-    </nav>
-    <nav>
-      <h6 class="footer-title">会社情報</h6>
-      <a class="link link-hover" href="/about/">About</a>
-      <a class="link link-hover" href="/contact/">Contact</a>
-      <a class="link link-hover">採用情報</a>
-    </nav>
-    <nav>
-      <h6 class="footer-title">サポート</h6>
-      <a class="link link-hover">ヘルプセンター</a>
-      <a class="link link-hover">API ドキュメント</a>
-      <a class="link link-hover">ステータス</a>
-    </nav>
-  </footer>
-  <footer class="footer footer-center p-4 bg-base-300 text-base-content border-t border-base-content/10">
-    <aside>
-      <p>Copyright 2025 TaskFlow Inc. All rights reserved</p>
-    </aside>
-  </footer>
 
   <script type="module" src="/index.ts"></script>
 </body>
