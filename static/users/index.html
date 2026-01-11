@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Users - API Demo</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
+    <div class="flex-1">
+      <a href="/" class="btn btn-ghost text-xl font-bold text-primary">TaskFlow</a>
+    </div>
+    <div class="flex-none">
+      <ul class="menu menu-horizontal px-1 hidden md:flex">
+        <li><a href="/">Home</a></li>
+        <li><a href="/users/" class="active">Users</a></li>
+        <li><a href="/todos/">Todos</a></li>
+        <li><a href="/chat/">Chat</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="max-w-4xl mx-auto p-4">
+    <h1 class="text-3xl font-bold mb-6">Users</h1>
+
+    <!-- ユーザー追加フォーム -->
+    <div class="card bg-base-200 mb-6">
+      <div class="card-body">
+        <h2 class="card-title">Add User</h2>
+        <form id="addUserForm" class="flex flex-col md:flex-row gap-2">
+          <input type="text" id="userName" placeholder="Name" class="input input-bordered flex-1" required>
+          <input type="email" id="userEmail" placeholder="Email" class="input input-bordered flex-1" required>
+          <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ユーザー一覧 -->
+    <div id="userList" class="space-y-2">
+      <div class="flex justify-center py-8">
+        <span class="loading loading-spinner loading-lg"></span>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    const userList = document.getElementById('userList');
+    const addUserForm = document.getElementById('addUserForm');
+    const userNameInput = document.getElementById('userName');
+    const userEmailInput = document.getElementById('userEmail');
+
+    async function fetchUsers() {
+      try {
+        const res = await fetch('/api/users');
+        const users = await res.json();
+        renderUsers(users);
+      } catch (error) {
+        userList.innerHTML = '<div class="alert alert-error">Failed to load users</div>';
+      }
+    }
+
+    function renderUsers(users) {
+      if (users.length === 0) {
+        userList.innerHTML = '<div class="alert">No users found</div>';
+        return;
+      }
+
+      userList.innerHTML = users.map(user => `
+        <div class="card bg-base-100 shadow">
+          <div class="card-body flex-row items-center justify-between py-4">
+            <div>
+              <h3 class="font-bold">${user.name}</h3>
+              <p class="text-sm text-base-content/70">${user.email}</p>
+            </div>
+            <div class="badge badge-primary">ID: ${user.id}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    addUserForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = userNameInput.value.trim();
+      const email = userEmailInput.value.trim();
+
+      if (!name || !email) return;
+
+      try {
+        const res = await fetch('/api/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email }),
+        });
+
+        if (res.ok) {
+          userNameInput.value = '';
+          userEmailInput.value = '';
+          fetchUsers();
+        }
+      } catch (error) {
+        console.error('Failed to add user:', error);
+      }
+    });
+
+    fetchUsers();
+  </script>
+</body>
+</html>

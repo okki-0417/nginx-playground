@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todos - API Demo</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
+    <div class="flex-1">
+      <a href="/" class="btn btn-ghost text-xl font-bold text-primary">TaskFlow</a>
+    </div>
+    <div class="flex-none">
+      <ul class="menu menu-horizontal px-1 hidden md:flex">
+        <li><a href="/">Home</a></li>
+        <li><a href="/users/">Users</a></li>
+        <li><a href="/todos/" class="active">Todos</a></li>
+        <li><a href="/chat/">Chat</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="max-w-4xl mx-auto p-4">
+    <h1 class="text-3xl font-bold mb-6">Todos</h1>
+
+    <!-- フィルター -->
+    <div class="flex gap-2 mb-6">
+      <select id="userFilter" class="select select-bordered">
+        <option value="">All Users</option>
+      </select>
+      <button id="refreshBtn" class="btn btn-outline">Refresh</button>
+    </div>
+
+    <!-- Todo一覧 -->
+    <div id="todoList" class="space-y-2">
+      <div class="flex justify-center py-8">
+        <span class="loading loading-spinner loading-lg"></span>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    const todoList = document.getElementById('todoList');
+    const userFilter = document.getElementById('userFilter');
+    const refreshBtn = document.getElementById('refreshBtn');
+
+    // ユーザー一覧を取得してフィルターに追加
+    async function fetchUsers() {
+      try {
+        const res = await fetch('/api/users');
+        const users = await res.json();
+        users.forEach(user => {
+          const option = document.createElement('option');
+          option.value = user.id;
+          option.textContent = user.name;
+          userFilter.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Failed to fetch users:', error);
+      }
+    }
+
+    async function fetchTodos() {
+      const userId = userFilter.value;
+      const url = userId ? `/api/todos?userId=${userId}` : '/api/todos';
+
+      try {
+        const res = await fetch(url);
+        const todos = await res.json();
+        renderTodos(todos);
+      } catch (error) {
+        todoList.innerHTML = '<div class="alert alert-error">Failed to load todos</div>';
+      }
+    }
+
+    function renderTodos(todos) {
+      if (todos.length === 0) {
+        todoList.innerHTML = '<div class="alert">No todos found</div>';
+        return;
+      }
+
+      todoList.innerHTML = todos.map(todo => `
+        <div class="card bg-base-100 shadow">
+          <div class="card-body flex-row items-center gap-4 py-4">
+            <input
+              type="checkbox"
+              class="checkbox checkbox-primary"
+              data-id="${todo.id}"
+              ${todo.completed ? 'checked' : ''}
+            >
+            <div class="flex-1">
+              <h3 class="font-bold ${todo.completed ? 'line-through text-base-content/50' : ''}">${todo.title}</h3>
+              <p class="text-sm text-base-content/70">User ID: ${todo.userId}</p>
+            </div>
+            <div class="badge ${todo.completed ? 'badge-success' : 'badge-warning'}">
+              ${todo.completed ? 'Done' : 'Pending'}
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      // チェックボックスのイベントを設定
+      document.querySelectorAll('.checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', async (e) => {
+          const id = e.target.dataset.id;
+          const completed = e.target.checked;
+
+          try {
+            await fetch(`/api/todos/${id}`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ completed }),
+            });
+            fetchTodos();
+          } catch (error) {
+            console.error('Failed to update todo:', error);
+          }
+        });
+      });
+    }
+
+    userFilter.addEventListener('change', fetchTodos);
+    refreshBtn.addEventListener('click', fetchTodos);
+
+    fetchUsers();
+    fetchTodos();
+  </script>
+</body>
+</html>
